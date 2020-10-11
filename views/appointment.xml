@@ -1,0 +1,132 @@
+<odoo>
+
+    <!-- Tree view of the patient model   -->
+    <record model="ir.ui.view" id="appointment_tree">
+        <field name="name">hospital.appointment.tree</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <tree string="Appointments">
+                <field name="patient_id"/>
+                <field name="name"/>
+                <field name="patient_age"/>
+                <field name="notes"/>
+                <field name="appointment_date"/>
+                <field name="appointment_count"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--form view of the patient model-->
+    <record model="ir.ui.view" id="appointment_form">
+        <field name="name">hospital.appointment.form</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <form string="Appointments">
+                <header>
+                    <button name="conform_appointment" string="Conform" type="object"
+                            class="oe_highlight" attrs="{'invisible': [('state','not in', ['draft'])]}"/>
+                    <button name="done_appointment" string="Done" type="object"
+                            class="oe_highlight" attrs="{'invisible': [('state','not in', ['conform'])]}"/>
+
+                </header>
+                <sheet>
+                    <header>
+                            <field name="state" widget="statusbar"  statusbar_visible="draft,conform,done"/>
+                        </header>
+                        <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="patient_id" options="{'no_create': True, 'no_open': True, 'no_create_edit':True}"
+                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="patient_age"/>
+                        </group>
+                        <group>
+                            <field name="appointment_date"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes"/>
+                    </group>
+                    <notebook>
+                        <page string="Doctor prescription">
+                            <field name="appointment_lines">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="product_qty"/>
+                                    <field name="appointments_id" invisible="1"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="product_id" options="{'no_create': True, 'no_open': True, 'no_create_edit':True}"/>
+                                        </group>
+                                        <group>
+                                             <field name="product_qty" options="{'no_create': True, 'no_open': True, 'no_create_edit':True}"/>
+                                        </group>
+                                    </group>
+                                    <field name="product_id"/>
+                                    <field name="product_qty"/>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="pharmacy">
+                        <field name="p_notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    search view
+    <record id="hospital_patient_search" model="ir.ui.view">
+        <field name="name">hospital.patient.search</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <search string="search patient">
+                <field name="patient_name" filter_domain="['|',('patient_name','ilike',self),('name_seq','ilike',self)]"/>
+                <field name="patient_name"/>
+                <field name="name_seq"/>
+                <separator/>
+                <filter string="Male" name="male" domain="[('gender','=','male')]"/>
+                <filter string="Female" name="female" domain="[('gender','=','female')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="GENDER" name="gender" context="{'group_by':'gender'}"/>
+
+                </group>
+            </search>
+        </field>
+    </record>
+    <!-- actions of the appointment menu -->
+
+    <record id="action_appointment" model="ir.actions.act_window">
+        <field name="name">Appointment</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.appointment</field>
+        <field name="view_mode">tree,form</field>
+<!--         for making default search filter "male is filter name "-->
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p>
+                create new patient
+            </p>
+        </field>
+    </record>
+
+
+    <menuitem id="learning_hospital_appointment"
+              name="APPOINTMENTS"
+              parent="learning_hospital_root"
+              action="action_appointment"
+              sequence="11"
+    />
+</odoo>

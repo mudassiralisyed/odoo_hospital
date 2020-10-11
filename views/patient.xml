@@ -1,0 +1,144 @@
+<odoo>
+
+    <!-- Tree view of the patient model   -->
+    <record model="ir.ui.view" id="patient_tree">
+        <field name="name">hospital.patient.tree</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <tree string="Patients">
+                <field name="patient_name"/>
+                <field name="gender"/>
+                <field name="name_seq"/>
+                <field name="patient_age"/>
+                <field name="age_group"/>
+                <field name="appointments_count"/>
+                <field name="notes"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--form view of the patient model-->
+    <record model="ir.ui.view" id="patient_form">
+        <field name="name">hospital.patient.form</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <form string="Patients">
+                <header>
+                    <button name="%(learning_hospital.create_appointment_wizard)d" string="Create Appointment"
+                            class="oe_highlight" type="action"
+                            context="{'default_patient_id':active_id}"
+                    />
+                </header>
+                <sheet>
+
+                    <div class="oe_button_box" name="button_box">
+                        <button name="open_patient_appointment" type="object"
+                                class="oe_stat_button" icon="fa-calendar" attrs="{'invisible': [('appointments_count', '=', 0)]}">
+                            <field name="appointments_count" string="Appointments" widget="statinfo"/>
+                        </button>
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+
+                    <div class="oe_title">
+                        <h1>
+                            <group>
+                                <field name="patient_name"/>
+                            </group>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="gender"/>
+                        </group>
+                        <group>
+                            <field name="doctor_id" options="{'no_create_edit':True, 'no_open':True,'color_field': 'color'}"/>
+                            <field name="doctor_gender"/>
+                        </group>
+                        <group>
+                            <field name="patient_age"/>
+                            <field name="age_group"/>
+                            <field name="name_seq" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes"/>
+                    </group>
+
+                    <!--                    <notebook colspan="4">-->
+                    <!--                        <page string="Appointments Details">-->
+                    <!--                            <field name="appointments_id" widget="one2many_list">-->
+                    <!--                            <tree string="Appointments" editable="bottom">-->
+                    <!--                                <field name="patient_id"/>-->
+                    <!--                                <field name="name"/>-->
+                    <!--                                <field name="patient_age"/>-->
+                    <!--                                <field name="notes"/>-->
+                    <!--                                <field name="appointment_date"/>-->
+                    <!--                                <field name="appointment_count"/>-->
+                    <!--                            </tree>-->
+                    <!--                            </field>-->
+                    <!--                        </page>-->
+                    <!--                    </notebook>-->
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!--search view-->
+    <record id="hospital_patient_search" model="ir.ui.view">
+        <field name="name">hospital.patient.search</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <search string="search patient">
+                <field name="patient_name"
+                       filter_domain="['|',('patient_name','ilike',self),('name_seq','ilike',self)]"/>
+                <field name="patient_name"/>
+                <field name="name_seq"/>
+                <separator/>
+                <filter string="Male" name="male" domain="[('gender','=','male')]"/>
+                <filter string="Female" name="female" domain="[('gender','=','female')]"/>
+                <filter string="Archived" name="active" domain="[('active','=',False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="GENDER" name="gender" context="{'group_by':'gender'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <!-- actions of the patient menu -->
+
+    <record id="action_patient" model="ir.actions.act_window">
+        <field name="name">Patient</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.patient</field>
+        <field name="view_mode">tree,form</field>
+        <!--         for making default search filter "male is filter name "-->
+        <!--        <field name="context">{"search_default_male": 1}</field>-->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                create new patient
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="learning_hospital_root"
+              name="HOSPITAl"
+              sequence="0"
+              web_icon="learning_hospital,statics/discription/icon.png"
+    />
+    <menuitem id="learning_hospital_patient"
+              name="PATIENT"
+              parent="learning_hospital_root"
+              action="action_patient"
+    />
+    <menuitem id="create_appointment_through_wizard"
+              name="Create Appointment"
+              parent="learning_hospital_root"
+              action="create_appointment_wizard"
+    />
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <report
+            id="report_patient_card"
+            model="hospital.patient"
+            string="Patient Card"
+            report_type="qweb-pdf"
+            name="learning_hospital.report_patient"
+            file="learning_hospital.report_patient"
+
+    />
+</odoo>
+<!--            report_type="qweb-pdf"-->

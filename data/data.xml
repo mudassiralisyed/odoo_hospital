@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sequences for appointment id -->
+        <record id="patient_xyz" model="hospital.patient">
+            <field name="patient_name">XYZ</field>
+            <field name="patient_age">55</field>
+            <field name="gender">female</field>
+            <field name="notes">time sa ana</field>
+        </record>
+
+    </data>
+</odoo>
+<!--we can use no update=1 in data file after loading the data for the purpose if we change any thing from frontend it will make no impact on data
+ and if we don't make update=1 it will always load the default data chahy hum nay front end sa change bhi kia ho-->
