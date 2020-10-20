@@ -9,6 +9,7 @@ class HospitalAppointment(models.Model):
     # _order = 'id desc'
     # or if we want to make an other field for order sequence
     _order = 'appointment_date desc'
+    _rec_name = "patient_id"
 
     def get_default_note(self):
         return "please be on time"
@@ -34,6 +35,8 @@ class HospitalAppointment(models.Model):
         ('done', 'Done'),
         ('cancel', 'Cancelled'),
     ], string='Status', readonly=True, default='draft')
+    doctor_id = fields.Many2many('hospital.doctor', 'hospital_patient_rel', 'appointment_id', 'doctor_id',
+                                 string='Doctor')
 
     def conform_appointment(self):
         for rec in self:

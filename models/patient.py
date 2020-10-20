@@ -28,6 +28,13 @@ class HospitalPatient(models.Model):
         for rec in self:
             if rec.doctor_id:
                 rec.doctor_gender = rec.doctor_id.doc_gender
+    # built in function name_get() for customizing name filed according to rec_name
+    def name_get(self):
+        result = []
+        for record in self:
+            rec_name = "%s has %s age group" % (record.patient_name, record.age_group)
+            result.append((record.id, rec_name))
+        return result
 
     patient_name = fields.Char(string='NAME', required=True, track_visibility='always')
     patient_age = fields.Integer(string='AGE', track_visibility='always', group_operator=False)
@@ -64,6 +71,10 @@ class HospitalPatient(models.Model):
                     rec.age_group = 'minor'
             else:
                 rec.age_group = 'null'
+
+    # def _age_group_editable(self):
+    #     for rec in self:
+    #         rec.age_group = rec.age_group.lower() if rec.age_group else False
 
     # function for adding error message or constrain
 

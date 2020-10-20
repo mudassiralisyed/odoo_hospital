@@ -53,7 +53,7 @@
                             <field name="gender"/>
                         </group>
                         <group>
-                            <field name="doctor_id" options="{'no_create_edit':True, 'no_open':True,'color_field': 'color'}"/>
+                            <field name="doctor_id" widget="many2one_tags" options="{'no_create_edit':True, 'no_open':True,'color_field': 'color'}"/>
                             <field name="doctor_gender"/>
                         </group>
                         <group>
@@ -110,6 +110,19 @@
             </search>
         </field>
     </record>
+
+<!--  action for adding subordinate hierarchy  -->
+    <record id="action_patient_appointment" model="ir.actions.act_window">
+        <field name="name">Appointments</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.appointment</field>
+        <field name="domain">[("patient_id", "=", active_id)]</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="learning_hospital.appointment_tree"/>
+        <field name="binding_model_id" ref="model_hospital_patient"/>
+<!--        binding model id is used where action button is to be used-->
+    </record>
+
     <!-- actions of the patient menu -->
 
     <record id="action_patient" model="ir.actions.act_window">
